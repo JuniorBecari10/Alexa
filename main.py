@@ -1,3 +1,5 @@
+# Deprecated. Use alexa.py instead!
+
 from youtube_search import YoutubeSearch
 import webbrowser
 import speech_recognition as sr
@@ -51,8 +53,15 @@ def parse_command(com):
         if "toca" in command:
             start_len = command.index("toca") + len("toca")
             music = command[start_len:]
-            print(music)
-            webbrowser.open(get_video_url(music), new=1)
+            dictio = get_youtube_search_dict(music)
+            url = get_video_url(music)
+            
+            print("Tocando " + dictio[0].get("title"))
+            speak("Tocando " + dictio[0].get("title"))
+            
+            webbrowser.open(url, new=1)
+            
+            talked_with_me = False
         
         if "cancela" in command:
             talked_with_me = False
@@ -61,11 +70,16 @@ def parse_command(com):
         if "tudo bem" in command or "tudo bom" in command:
             print("Sim.")
             speak("Sim.")
+            
+            talked_with_me = False
 
 def get_video_url(search):
     results = YoutubeSearch(search, max_results=10).to_dict()
     
-    return "https://youtube.com/watch?v=" + results[0].get("id")
+    return "https://youtube.com/watch?v=" + results[0].get("id") ## exception
+
+def get_youtube_search_dict(search):
+    return YoutubeSearch(search, max_results=10).to_dict()
 
 if __name__ == "__main__":
     while True:
