@@ -3,6 +3,14 @@ import pyttsx3
 import webbrowser
 from youtube_search import YoutubeSearch
 import wikipedia as wiki
+import keyboard
+import subprocess
+import thread6 as thread
+import sys
+import os
+import random
+
+boas_vindas = ["Pois não?", "Boah", "Qual é?", "Suave?", "Diga.", "Desembucha!", "O que foi?", "Para de me encher o saco! Fala logo."]
 
 engine = pyttsx3.init()
 
@@ -11,9 +19,19 @@ called = False
 wiki.set_lang("pt")
 
 def main():
+    #thread.run_threaded(quit)
+    
     while True:
         com = ask("Escutando", False)
         interpret(com)
+
+@thread.threaded()
+def quit():
+    while True:
+        if False: #keyboard.is_pressed("q"):
+            print("Resetando...")
+            sys.exit()
+            subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
 
 def speak(text: str):
     engine.say(text)
@@ -53,8 +71,10 @@ def interpret(command):
     if name in com:
         called = True
         
-        print("Pois não?")
-        speak("Pois não?")
+        frase = random.choice(boas_vindas)
+        
+        print(frase)
+        speak(frase)
     
     if called:
         if "tudo bem" in com:
@@ -77,7 +97,7 @@ def interpret(command):
             called = False
         
         if "toca" in com or "canta" in com or "reproduz" in com:
-            start_len = command.index("toca") + len("toca")
+            start_len = com.index("toca") + len("toca")
             music = com[start_len:]
             
             dictio = get_youtube_search_dict(music)
