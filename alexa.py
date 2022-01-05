@@ -1,5 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
+import webbrowser
+from youtube_search import YoutubeSearch
 
 engine = pyttsx3.init()
 
@@ -54,16 +56,48 @@ def interpret(command):
     
     if called:
         if "tudo bem" in com:
-            print("Sim.")
-            speak("Sim")
-            
-            res = ask("E você?")
+            res = ask("Sim, e você?")
             
             if "sim" in res or "também" in res:
                 print("Que bom.")
                 speak("Que bom.")
             
+            elif "não" in res:
+                print("Que pena.")
+                speak("Que pena.")
+            
             called = False
+        
+        if "cancela" in com or "anula" in com:
+            print("Cancelado.")
+            speak("Cancelado")
+            
+            called = False
+        
+        if "toca" in command or "canta" in command:
+            start_len = command.index("toca") + len("toca")
+            music = command[start_len:]
+            dictio = get_youtube_search_dict(music)
+            url = get_video_url(music)
+            
+            print("Reproduzindo " + dictio[0].get("title") + " no YouTube.")
+            speak("Reproduzindo " + dictio[0].get("title") + " no YouTube.")
+            
+            webbrowser.open(url, new=1)
+            
+            called = False
+
+# Functions
+
+def get_video_url(search):
+    results = YoutubeSearch(search, max_results=10).to_dict()
+    
+    return "https://youtube.com/watch?v=" + results[0].get("id") ## exception
+
+def get_youtube_search_dict(search):
+    return YoutubeSearch(search, max_results=10).to_dict()
+
+# ------------------------------------------------
 
 if __name__ == "__main__":
     main()
