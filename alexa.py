@@ -2,11 +2,13 @@ import speech_recognition as sr
 import pyttsx3
 import webbrowser
 from youtube_search import YoutubeSearch
+import wikipedia as wiki
 
 engine = pyttsx3.init()
 
 name = "alex"
 called = False
+wiki.set_lang("pt")
 
 def main():
     while True:
@@ -74,9 +76,10 @@ def interpret(command):
             
             called = False
         
-        if "toca" in command or "canta" in command:
+        if "toca" in com or "canta" in com or "reproduz" in com:
             start_len = command.index("toca") + len("toca")
-            music = command[start_len:]
+            music = com[start_len:]
+            
             dictio = get_youtube_search_dict(music)
             url = get_video_url(music)
             
@@ -86,6 +89,16 @@ def interpret(command):
             webbrowser.open(url, new=1)
             
             called = False
+        if "pesquisa" in com: # in com and "wikipedia" 
+            start_len = 9 # sim, hardcoded
+            query = com[start_len:]
+            
+            print("Significado de " + query + " na Wikipedia:")
+            speak("Significado de " + query + " na Wikipedia:")
+            
+            print(wiki.summary(query))
+            speak(wiki.summary(query))
+            
 
 # Functions
 
