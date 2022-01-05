@@ -14,7 +14,7 @@ boas_vindas = ["Pois não?", "Boah", "Qual é?", "Suave?", "Diga.", "Desembucha!
 
 engine = pyttsx3.init()
 
-name = "alex"
+name = "lex" # talvez entende Alex ou Lexa ou Lex
 called = False
 wiki.set_lang("pt")
 
@@ -28,10 +28,12 @@ def main():
 @thread.threaded()
 def quit():
     while True:
-        if False: #keyboard.is_pressed("q"):
+        if keyboard.is_pressed("q"):
             print("Resetando...")
-            sys.exit()
-            subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+            main()
+            break
+            #sys.exit()
+            #subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
 
 def speak(text: str):
     engine.say(text)
@@ -52,7 +54,7 @@ def ask(question: str, speakLoud=True):
         
         try:
             text = r.recognize_google(audio, language="pt-br")
-            
+            print("Você disse: " + text)
             return text
         except Exception:
             print("Não entendi.")
@@ -97,7 +99,7 @@ def interpret(command):
             called = False
         
         if "toca" in com or "canta" in com or "reproduz" in com:
-            start_len = com.index("toca") + len("toca")
+            start_len = com.index(" ")
             music = com[start_len:]
             
             dictio = get_youtube_search_dict(music)
