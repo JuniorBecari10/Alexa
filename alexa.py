@@ -9,10 +9,15 @@ import thread6 as thread
 import sys
 import os
 import random
+from datetime import date
 
-boas_vindas = ["Pois não?", "Boah", "Qual é?", "Suave?", "Diga.", "Desembucha!", "O que foi?", "Para de me encher o saco! Fala logo."]
+boas_vindas = ["Pois não?", "Boah", "Qual é?", "Suave?", "Diga.", "Iaê!", "O que foi?", "Chora!"]
 
 engine = pyttsx3.init()
+
+meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+
+niver = "08/01/2022"
 
 name = "lex" # talvez entende Alex ou Lexa ou Lex
 called = False
@@ -120,6 +125,30 @@ def interpret(command):
             
             print(wiki.summary(query))
             speak(wiki.summary(query))
+        
+        if "dia" in com and "hoje" in com:
+            today = date.today()
+            form = today.strftime("%d/%m/%Y") # 08/01/2022 (por hoje kk)
+            
+            is_niver = False
+            
+            if (form == niver):
+                is_niver = True
+            
+            ext = form.replace(form[form.index("/") + 1:form.index("/") + 3], meses[int(form[form.index("/") + 1:form.index("/") + 3]) - 1])
+            ext = ext.replace("/", " de ")
+            
+            speak_ext = ext
+            
+            if (ext[0] == "0"):
+                speak_ext = speak_ext[1:]
+            
+            print("Hoje é dia " + ext + ".")
+            speak("Hoje é dia " + speak_ext + ".")
+            
+            if (is_niver):
+                print("Hoje é o seu aniversário. Parabéns!")
+                speak("Hoje é o seu aniversário. Parabéns!")
             
 
 # Functions
